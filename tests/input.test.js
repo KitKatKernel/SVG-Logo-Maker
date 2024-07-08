@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const promptUser = require('../lib/input'); 
 
-// Moc inquirer.prompt
+// Mock inquirer.prompt
 jest.mock('inquirer');
 
 describe('promptUser', () => {
@@ -9,10 +9,10 @@ describe('promptUser', () => {
         const mockAnswers = {
             logoName: 'LOG',
             textPrompt: 'Choose from available colors',
-            textChoice: 'Red',
+            textChoice: 'White',
             shape: 'Circle',
             shapePrompt: 'Choose from available colors',
-            shapeChoice: 'Blue'
+            shapeChoice: 'Red'
         };
 
         inquirer.prompt.mockResolvedValue(mockAnswers);
@@ -21,20 +21,35 @@ describe('promptUser', () => {
         expect(answers).toEqual(mockAnswers);
     });
 
-    // Test for validating logoName
     it('should validate the logoName correctly', async () => {
         const invalidAnswer = '';
         const validAnswer = 'LOG';
 
-        // Implement validation logic tomorrow
-        expect(true).toBe(true); 
+        inquirer.prompt.mockImplementation(() => Promise.resolve({ logoName: invalidAnswer }));
+        try {
+            await promptUser();
+        } catch (e) {
+            expect(e.message).toBe('Text must be 3 characters or less');
+        }
+
+        inquirer.prompt.mockResolvedValue({ logoName: validAnswer });
+        const answers = await promptUser();
+        expect(answers.logoName).toBe(validAnswer);
     });
 
-    // WIP hex color
     it('should validate hex color correctly', async () => {
         const validHex = '#FFF';
         const invalidHex = 'FFF1';
 
-        expect(true).toBe(true); 
+        inquirer.prompt.mockImplementation(() => Promise.resolve({ textHex: invalidHex }));
+        try {
+            await promptUser();
+        } catch (e) {
+            expect(e.message).toBe('Please input a hex code that is either 3 or 6 digits long.');
+        }
+
+        inquirer.prompt.mockResolvedValue({ textHex: validHex });
+        const answers = await promptUser();
+        expect(answers.textHex).toBe(validHex);
     });
 });
