@@ -1,4 +1,4 @@
-const { Circle, Triangle, Square } = require('./lib/shape');
+const { Circle, Triangle, Square } = require('./lib/shapes');
 const userInput = require('./lib/input');
 const fs = require('fs');
 
@@ -6,27 +6,35 @@ async function generateLogo() {
     try {
         const answers = await userInput();
 
-        console.log('User Answers:', answers);
-
         let shape;
-        // TODO: choose shape based on user input
-        if (answers.shape === 'Circle') {
-        } else if (answers.shape === 'Triangle') {
-        } else if (answers.shape === 'Square') {
-        } else {
-            console.log('You shoudl never see this');
-            return; 
+        switch (answers.shape) {
+            case 'Circle':
+                shape = new Circle();
+                break;
+            case 'Triangle':
+                shape = new Triangle();
+                break;
+            case 'Square':
+                shape = new Square();
+                break;
+            default:
+                console.error('Invalid shape selected');
+                return;
         }
 
-        // TODO: Set shape color: shape.setColor(answers.shapeColor);
+        shape.setColor(answers.shapePrompt === 'Choose from available colors' ? answers.shapeChoice : answers.shapeHex);
 
-        // TODO: Set text color: const textColor = answers.textColor;
-
-        // TODO: Generate SVG content
+        const textColor = answers.textPrompt === 'Choose from available colors' ? answers.textChoice : answers.textHex;
         
+        const svgContent = `
+            <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+                ${shape.render()}
+                <text x="150" y="125" font-size="60" text-anchor="middle" fill="${textColor}">${answers.logoName}</text>
+            </svg>
+        `;
 
-        // TODO: Write SVG content to file
-        
+        fs.writeFileSync('logo.svg', svgContent);
+        console.log('Generated logo.svg');
     } catch (error) {
         console.error('Error:', error);
     }
