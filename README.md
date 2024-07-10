@@ -1,5 +1,11 @@
 # SVG Logo Maker Project
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+![Sample](./sample.png)
+
+[Watch the Demo Video](https://drive.google.com/file/d/1SfyvCsNNUCa57_D5lLvk7vOLPrhOh110/view?usp=sharing)
+
 ## What is This Project?
 
 This project is a Node.js application that generates a logo and saves it as an SVG file.
